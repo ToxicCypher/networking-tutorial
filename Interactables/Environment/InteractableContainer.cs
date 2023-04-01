@@ -57,7 +57,7 @@ public class InteractableContainer : InteractableObject
         }
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void InteractWithObjectOnServerRpc()
     {
         b_openFlag.Value = !b_openFlag.Value; //Straight up just affect the value
