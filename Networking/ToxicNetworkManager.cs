@@ -42,6 +42,15 @@ public class ToxicNetworkManager : NetworkManager
             fp.targetSteamId = _aekeronId;
         }
 
-        StartClient();
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += LoadSceneAsClient;
+
+        UnityEngine.SceneManagement.SceneManager.LoadScene(1);
     }    
+
+    private void LoadSceneAsClient(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
+    {
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded -= LoadSceneAsClient;
+
+        StartClient();
+    }
 }
