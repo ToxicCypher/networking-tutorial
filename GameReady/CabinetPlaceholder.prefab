@@ -247,7 +247,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _objectToMove: {fileID: 3219026654580790998}
   _rotateSpeed: 85
-  _openRotation: 120
+  _openRotationClamp: 120
 --- !u!114 &3219026654010783258
 MonoBehaviour:
   m_ObjectHideFlags: 0
