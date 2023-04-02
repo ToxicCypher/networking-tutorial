@@ -30,7 +30,8 @@ public class InteractableButton : InteractableObject
     {
         if (b_pressedFlag.Value && b_canBePressed.Value)
         {
-            _objectToMove.transform.position -= new Vector3(_objectToMove.transform.position.x - .5f, _objectToMove.transform.position.y, _objectToMove.transform.position.z);
+            
+            _objectToMove.transform.position = new Vector3(_objectToMove.transform.position.x - .25f, _objectToMove.transform.position.y, _objectToMove.transform.position.z);
             b_canBePressed.Value = false;
             SVS.UpdateButtonPress(_buttonId);
         }

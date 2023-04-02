@@ -5,20 +5,21 @@ using Unity.Netcode;
 
 public class InteractableDoor : InteractableObject
 {
-    private NetworkVariable<bool> b_pressedFlag = new NetworkVariable<bool>(); //Syncronize Open State
-    private NetworkVariable<bool> b_canBePressed = new NetworkVariable<bool>();
+    private NetworkVariable<bool> b_doorCanOpen = new NetworkVariable<bool>(); //Syncronize Open State
+    private NetworkVariable<bool> b_doorIsOpen = new NetworkVariable<bool>(); //Syncronize Open State
 
-    [SerializeField] Transform _objectToMove;   //Transform of door/drawer/etc to move
-    [SerializeField] int _buttonId;  
+    [SerializeField] GameObject _leftDoor;   //Transform of door/drawer/etc to move
+    [SerializeField] GameObject _rightDoor;   //Transform of door/drawer/etc to move
+    [SerializeField] int _doorId;  
 
 
     private void Awake()
     {
-        b_canBePressed.Value = true;
-        b_pressedFlag.Value = false;
+        b_doorCanOpen.Value = false;
+        b_doorIsOpen.Value = false;
         if (!IsHost)
         {
-            b_pressedFlag.OnValueChanged += (last, current) =>
+            b_doorCanOpen.OnValueChanged += (last, current) =>
             {
                 //Do Nothing, this is just mandatory to "Listen" for change
             };
@@ -28,11 +29,19 @@ public class InteractableDoor : InteractableObject
 
     private void Update()
     {
-        if (b_pressedFlag.Value && b_canBePressed.Value)
+        if (_doorId == 1)
         {
-            _objectToMove.transform.position -= new Vector3(_objectToMove.transform.position.x - .5f, _objectToMove.transform.position.y, _objectToMove.transform.position.z);
-            b_canBePressed.Value = false;
-            SVS.UpdateButtonPress(_buttonId);
+            b_doorCanOpen.Value = SVS.CheckIfDoorOneCanOpen();
+        }
+        if (_doorId == 2)
+        {
+            b_doorCanOpen.Value = SVS.CheckIfDoorTwoCanOpen();
+        }
+        if (b_doorCanOpen.Value && !b_doorIsOpen.Value)
+        {
+            Destroy(_leftDoor);
+            Destroy(_rightDoor);
+            b_doorIsOpen.Value = true;
         }
     }
 
@@ -40,7 +49,7 @@ public class InteractableDoor : InteractableObject
     {
         if (IsHost)
         {
-            b_pressedFlag.Value = !b_pressedFlag.Value;   //Straight up just affect the value
+            b_doorCanOpen.Value = !b_doorCanOpen.Value;   //Straight up just affect the value
         }
         else
         {
@@ -51,7 +60,7 @@ public class InteractableDoor : InteractableObject
     [ServerRpc(RequireOwnership = false)]
     public void InteractWithObjectOnServerRpc()
     {
-        b_pressedFlag.Value = !b_pressedFlag.Value; //Straight up just affect the value
+        b_doorCanOpen.Value = !b_doorCanOpen.Value; //Straight up just affect the value
     }
 
     private void OnTriggerStay(Collider other)
@@ -60,7 +69,7 @@ public class InteractableDoor : InteractableObject
         {
             if (Input.GetMouseButtonDown(0))
             {
-                b_pressedFlag.Value = true;
+                b_doorCanOpen.Value = true;
             }
         }
     }
