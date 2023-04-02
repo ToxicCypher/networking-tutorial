@@ -1,3 +1,4 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,7 +29,7 @@ public class InteractableContainer : InteractableObject
 
     private void Update()
     {
-        if(b_openFlag.Value)
+        if (b_openFlag.Value)
         {
             float adjust = _curRotation + Time.deltaTime * _rotateSpeed;
             _curRotation = Mathf.Clamp(adjust, 0, _openRotationClamp);
@@ -63,5 +64,5 @@ public class InteractableContainer : InteractableObject
         b_openFlag.Value = !b_openFlag.Value; //Straight up just affect the value
     }
 
-    
+
 }
