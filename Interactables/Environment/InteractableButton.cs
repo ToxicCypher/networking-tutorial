@@ -67,17 +67,25 @@ public class InteractableButton : InteractableObject
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.tag == "Player")
+        if (IsHost)
         {
-            b_canBePressed.Value = true;
+            if (other.tag == "Player")
+            {
+                b_canBePressed.Value = true;
+            }
+
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Player")
+        if (IsHost)
         {
-            b_canBePressed.Value = false;
+            if (other.tag == "Player")
+            {
+                b_canBePressed.Value = false;
+            }
+
         }
     }
 
