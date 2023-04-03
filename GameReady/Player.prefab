@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 4794049451489297643}
   - component: {fileID: 6093220068070679097}
   - component: {fileID: 3180746183967378855}
+  - component: {fileID: 7558325909056410372}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -50,6 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a838440dd3466f408edeeb68aa4bed4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  networkTransform: {fileID: 7558325909056410372}
   rigidBody: {fileID: 8703966833303975913}
   movementSpeed: 10
 --- !u!114 &1061294011972804785
@@ -162,3 +164,29 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1061294011972804786}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &7558325909056410372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1061294011972804786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 1
+  SyncScaleY: 1
+  SyncScaleZ: 1
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  InLocalSpace: 0
+  Interpolate: 1
