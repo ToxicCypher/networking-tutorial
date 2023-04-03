@@ -40,12 +40,16 @@ public class NetworkPlayer : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        yaw += 5 * Input.GetAxis("Mouse X");
-        pitch -= 5 * Input.GetAxis("Mouse Y");
-        pitch = Mathf.Clamp(pitch, -45, 45);
+        if (IsLocalPlayer)
+        {
+            yaw += 5 * Input.GetAxis("Mouse X");
+            pitch -= 5 * Input.GetAxis("Mouse Y");
+            pitch = Mathf.Clamp(pitch, -45, 45);
 
-        Camera.main.transform.eulerAngles = new Vector3(pitch, yaw, 0.0f);
-        transform.eulerAngles = new Vector3(0, yaw, 0);
+            Camera.main.transform.eulerAngles = new Vector3(pitch, yaw, 0.0f);
+            transform.eulerAngles = new Vector3(0, yaw, 0);
+        }
+
     }
 
     private void FixedUpdate()
