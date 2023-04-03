@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 
-public class InteractableDoor : InteractableObject
+public class InteractableDoor : NetworkBehaviour
 {
-    private NetworkVariable<bool> b_doorCanOpen = new NetworkVariable<bool>(); //Syncronize Open State
-    private NetworkVariable<bool> b_doorIsOpen = new NetworkVariable<bool>(); //Syncronize Open State
 
     [SerializeField] GameObject _leftDoor;   //Transform of door/drawer/etc to move
     [SerializeField] GameObject _rightDoor;   //Transform of door/drawer/etc to move
@@ -15,63 +13,68 @@ public class InteractableDoor : InteractableObject
 
     private void Awake()
     {
-        b_doorCanOpen.Value = false;
-        b_doorIsOpen.Value = false;
-        if (!IsHost)
-        {
-            b_doorCanOpen.OnValueChanged += (last, current) =>
-            {
-                //Do Nothing, this is just mandatory to "Listen" for change
-            };
-        }
+
     }
 
 
     private void Update()
     {
-        if (_doorId == 1)
+        
+        if (_doorId == 1 && SVS.CheckIfDoorOneCanOpen())
         {
-            b_doorCanOpen.Value = SVS.CheckIfDoorOneCanOpen();
-        }
-        if (_doorId == 2)
-        {
-            b_doorCanOpen.Value = SVS.CheckIfDoorTwoCanOpen();
-        }
-        if (b_doorCanOpen.Value && !b_doorIsOpen.Value)
-        {
-            Destroy(_leftDoor);
-            Destroy(_rightDoor);
-            b_doorIsOpen.Value = true;
-        }
-    }
-
-    public override void InteractWithObject()
-    {
-        if (IsHost)
-        {
-            b_doorCanOpen.Value = !b_doorCanOpen.Value;   //Straight up just affect the value
-        }
-        else
-        {
-            InteractWithObjectOnServerRpc();    //Tell server to straight up just affect the value
-        }
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    public void InteractWithObjectOnServerRpc()
-    {
-        b_doorCanOpen.Value = !b_doorCanOpen.Value; //Straight up just affect the value
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.tag == "Player")
-        {
-            if (Input.GetMouseButtonDown(0))
+            Debug.Log("Door 1 can be opened");
+            if (IsHost)
             {
-                b_doorCanOpen.Value = true;
+                Debug.Log("Am Host");
+                DestoryDoors();
+                DestoryDoorOnServerRpc();
+            }
+            else if (IsClient)
+            {
+                Debug.Log("Am Client");
+                DestoryDoors();
+                DestoryDoorOnClientRpc();
+            }
+        } 
+
+        if (_doorId == 2 && SVS.CheckIfDoorTwoCanOpen())
+        {
+            Debug.Log("Door 2 can be opened");
+            if (IsHost)
+            {
+                Debug.Log("Am Host");
+                DestoryDoors();
+                DestoryDoorOnServerRpc();
+            }
+            else if (IsClient)
+            {
+                Debug.Log("Am Client");
+                DestoryDoors();
+                DestoryDoorOnClientRpc();
             }
         }
     }
 
+
+    [ServerRpc]
+    private void DestoryDoorOnServerRpc()
+    {
+        DestoryDoors();
+        DestoryDoorOnClientRpc();
+    }
+
+    [ClientRpc]
+    private void DestoryDoorOnClientRpc()
+    {
+        if (!IsLocalPlayer)
+        {
+            DestoryDoors();
+        }
+    }
+    
+    private void DestoryDoors()
+    {
+        Destroy(_leftDoor);
+        Destroy(_rightDoor);
+    }
 }
