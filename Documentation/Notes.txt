@@ -1,0 +1,9 @@
+Host and local players do not subsribe to variable changes.
+
+NetworkVariable - can take anything that is a built in type. 
+
+TODO:
+Implement character controller
+Create button interact script
+Door open script
+
